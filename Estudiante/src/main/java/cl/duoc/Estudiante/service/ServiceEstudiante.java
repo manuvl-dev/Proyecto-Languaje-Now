@@ -46,9 +46,9 @@ public Boolean estudianteEliminar(Estudiante estudiante){
         return true;}
 }
 
-public List<Estudiante> buscarNombreParcial(String nombre) {
+public List<Estudiante> buscarNombreParcial(String nombreCompletoEsudiante) {
 
-    return repositoryEstudiante.findByNombreCompletoEstudianteContaining(nombre);
+    return repositoryEstudiante.findByNombreCompletoEstudianteContaining(nombreCompletoEsudiante);
 
 }
 

@@ -21,20 +21,19 @@ import cl.duoc.Estudiante.service.ServiceEstudiante;
 @RequestMapping("/estudiantes")
 public class ControllerEstudiante {
 @Autowired
-private ServiceEstudiante serviceEstudiante; // Asumiendo que tu clase se llama así
-
+private ServiceEstudiante serviceEstudiante;
 @GetMapping("/listar")
 public ResponseEntity<List<Estudiante>> listar() {
     return ResponseEntity.ok(serviceEstudiante.estudianteListar());
     }
 
 @GetMapping("/buscar/{id}")
-public ResponseEntity<?> buscar(@PathVariable Integer id) {
+public ResponseEntity<?> buscarId(@PathVariable Integer id) {
     Estudiante estudiante = serviceEstudiante.estudianteBuscar(id);
     if (estudiante != null) {
      return ResponseEntity.ok(estudiante);
     } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Estudiante no encontrado con ID: " + id);
+        return ResponseEntity.status(404).body("Estudiante no encontrado con ID: " + id);
         }
     }
 
@@ -43,18 +42,16 @@ public ResponseEntity<String> guardar(@RequestBody Estudiante estudiante) {
      if (serviceEstudiante.estudianteAlmacenar(estudiante)) {
             return ResponseEntity.status(HttpStatus.CREATED).body("Estudiante guardado exitosamente.");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El RUT ya se encuentra registrado.");
+            return ResponseEntity.status(400).body("Error: El RUT ya se encuentra registrado.");
         }
     }
 
 @PutMapping("/modificar")
 public ResponseEntity<String> modificar(@RequestBody Estudiante estudiante) {
-        // Nota: En tu service tenías 'return false' si existía. 
-        // Lo lógico es: si existe, se modifica -> true.
     if (serviceEstudiante.estudianteModificar(estudiante)) {
         return ResponseEntity.ok("Datos del estudiante actualizados correctamente.");
     } else {
-     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: No se puede modificar, el estudiante no existe.");
+     return ResponseEntity.status(400).body("Error: No se puede modificar, el estudiante no existe.");
         }
     }
 
@@ -63,12 +60,12 @@ public ResponseEntity<String> eliminar(@RequestBody Estudiante estudiante) {
      if (serviceEstudiante.estudianteEliminar(estudiante)) {
         return ResponseEntity.ok("Estudiante eliminado correctamente.");
         } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: El estudiante no existe y no pudo ser eliminado.");
+        return ResponseEntity.status(404).body("Error: El estudiante no existe y no pudo ser eliminado.");
         }
     }
 
  @GetMapping("/buscar-nombre/{nombre}")
-public ResponseEntity<List<Estudiante>> buscarPorNombre(@PathVariable String nombre) {
-        return ResponseEntity.ok(serviceEstudiante.buscarNombreParcial(nombre));
+public ResponseEntity<List<Estudiante>> buscarPorNombre(@PathVariable String nombreCompletoEsudiante) {
+        return ResponseEntity.ok(serviceEstudiante.buscarNombreParcial(nombreCompletoEsudiante));
     }
 }
